@@ -65,7 +65,6 @@ void topple(int grid[3][3])
 	{
 		for (y = 0; y < 3; y++)
 		{
-
 			if (grid[x][y] >= 4)
 			{
 				tmp_grid[x][y] -= 4;
@@ -84,7 +83,6 @@ void topple(int grid[3][3])
 			}
 		}
 	}
-
 	sum_grid(grid, tmp_grid);
 }
 
