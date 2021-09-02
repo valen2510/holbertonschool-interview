@@ -4,6 +4,16 @@ import signal
 import sys
 
 
+def print_stats(sum, status):
+    """
+    Function that print stats
+    """
+
+    print('File size: {}'.format(sum))
+    for key, value in sorted(status.items()):
+        if value != 0:
+            print('{}: {}'.format(key, value))
+
 if __name__ == '__main__':
     sum_size = 0
     status_code = {
@@ -29,10 +39,10 @@ if __name__ == '__main__':
                     i += 1
                     status_code[status] += 1
                     if i % 10 == 0:
-                        print('File size: {}'.format(sum_size))
-                        for key, value in sorted(status_code.items()):
-                            if value != 0:
-                                print('{}: {}'.format(key, value))
+                        print_stats(sum_size, status_code)
 
     except KeyboardInterrupt:
-        print('File size: {}'.format(sum_size))
+        print_stats(sum_size, status_code)
+        raise
+    else:
+        print_stats(sum_size, status_code)
