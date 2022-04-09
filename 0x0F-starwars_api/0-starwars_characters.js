@@ -1,23 +1,33 @@
 #!/usr/bin/node
-const args = process.argv.slice(2);
-const URL = 'https://swapi-api.hbtn.io/api/films/' + args[0];
-const request = require('request');
 
-const getCharacterName = (link) => {
-  const characterName = new Promise((resolve, reject) => {
-    request(link, (error, response, body) => {
-      if (error) console.error('error:', error);
-      resolve(JSON.parse(body).name);
+const request = require('request');
+const urlMovie = 'https://swapi-api.hbtn.io/api/films/' + process.argv[2];
+
+request(urlMovie, async function (error, response, body) {
+  const arr = [];
+
+  if (error) {
+    console.log(error);
+  } else {
+    const film = JSON.parse(body);
+    for (let i = 0; i < film.characters.length; i++) {
+      arr.push(myCharacter(film.characters[i]));
+    }
+  }
+
+  let actors = await Promise.all(arr);
+
+  actors = actors.map((actor) => JSON.parse(actor).name);
+  actors.forEach((actor) => console.log(actor));
+});
+
+function myCharacter(thisCharacter) {
+  return new Promise((resolve, reject) => {
+    request(thisCharacter, function (error, response, body) {
+      if (error) {
+        reject(error);
+      }
+      resolve(body);
     });
   });
-  return characterName;
-};
-
-request(URL, async (error, response, body) => {
-  if (error) console.error('error:', error);
-  const characters = JSON.parse(body).characters;
-  for (let i = 0; i < characters.length; i++) {
-    const characterName = await getCharacterName(characters[i]);
-    console.log(characterName);
-  }
-});
+}
